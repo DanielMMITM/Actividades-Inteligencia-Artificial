@@ -628,7 +628,7 @@ En la parte del primer else, se coloca otra condición que es por si el numero e
 
 Si no se cumplen estas condiciones quiere decir que estamos frente a un caso donde el numero es impar o no es potencia de 2, es más general, es decir se resolverá con la formula _2m + 1_, finalmente imprimimos el valor de la posición que se salvará.
 
-```py
+```python
 import  math
 def  kill(supervivientes):
 	if supervivientes <= 0:
@@ -649,3 +649,51 @@ kill(supervivientes)
 ```
 
 ---
+
+# Problema de los 3 misioneros y los 3 caníbales
+
+Tres misioneros se perdieron explorando una jungla. Separados de sus compañeros, sin alimento y sin radio, solo sabían que para llegar a su destino debían ir siempre hacia adelante. Los tres misioneros se detuvieron frente a un río que les bloqueaba el paso, preguntándose que podían hacer. De repente, aparecieron tres caníbales llevando un bote, pues también el-los querían cruzar el río. Ya anteriormente se habían encontrado grupos de misioneros y caníbales, y cada uno respetaba a los otros, pero sin confiaren ellos. Los caníbales se daban un festín con los misioneros cuando les superaban en número. Los tres caníbales deseaban ayudar a los misioneros a cruzar el río, pero su bote no podía llevar más de dos personas a la vez y los misioneros no querían que los caníbales les superaran en número. ¿Cómo puede resolverse el problema, sin que en ningún momento haya más caníbales que misioneros en cualquier orilla del río? recuerda que un misionero y un caníbal en una orilla del río más uno o dos caníbales en el bote al mismo lado, significa que los misioneros tendrán problemas.
+
+Para este ejercicio se pide, encontrar la secuencia de percepción y la medida de rendimiento. Debemos tener en cuenta las reglas previamente ya mencionadas, no podemos dejar de un lado más caníbales porque estos podrían violentar a los monjes o misioneros.
+
+Para este ejercicio solo fue cuestión de probar, aunque se encontró un patrón y es siempre llevar 1 monje y 1 caníbal en el bote.
+
+### Secuencia de percepción:
+
+A continuación, se muestra en una tabla el análisis de todos los posibles estados o situaciones para el ejercicio de monjes, las cuales podríamos realizar en este ejercicio para llegar al estado final o estado ideal.
+Se utiliza la siguiente notación:
+
+- **D:** Para lado derecho.
+- **I:** Para lado Izquierdo.
+- **I-D:** Cruza del lado izquierdo al lado derecho.
+- **D-I:** Cruza del lado derecho al lado izquierdo.
+- **mI:** Monjes en el lado izquierdo.
+- **mD:** Monjes en el lado derecho.
+- **cI:** Caníbales en el lado izquierdo.
+- **cD:** Caníbales en el lado derecho.
+
+#### Espacio de estados
+
+|             Estado             |     Cruza Canibal solo      |       Cruza Monje Solo       |     Cruzan 2 Canibales      |       Cruzan 2 Monjes       |  Cruza 1 Monje y 1 Canibal  |
+| :----------------------------: | :-------------------------: | :--------------------------: | :-------------------------: | :-------------------------: | :-------------------------: |
+| **I (3 mI, 3 cI, 0 mD, 0 cD)** | I-D(3 mI, 2 cI, 0 mD, 1 cD) | I-D(2 mI, 3 cI, 1 mD, 0 cD)  | I-D(3 mI, 1 cI, 0 mD, 2 cD) |          problema           | I-D(2 mI, 2 cI, 1 mD, 1 cD) |
+| **D (3 mI, 2 cI, 0 mD, 1 cD)** | D-I(3 mI, 3 cI, 0 mD, 0 cD) |          imposible           |          imposible          |          imposible          |          imposible          |
+| **D (2 mI, 3 cI, 1 mD, 0 cD)** |          imposible          | D-I(3 mI, 3 cI, 0 mD, 0 cD)  |          imposible          |          imposible          |          imposible          |
+| **D (3 mI, 1 cI, 0 mD, 2 cD)** | D-I(3 mI, 2 cI, 0 mD, 1 cD) |          imposible           | D-I(3 mI, 3 cI, 0 mD, 0 cD) |          imposible          |          imposible          |
+| **I (3 mI, 2 cI, 0 mD, 1 cD)** |          problema           | I-D(2 mI, 2 cI, 1 mD, 1 mD)  | I-D(3 mI, 0 cI, 0 mD, 3 cD) |          problema           |          problema           |
+| **D (3 mI, 0 cI, 0 mD, 3 cD)** | D-I(3 mI, 1 cI, 0 mD, 2 cD) |          imposible           | D-I(3 mI, 2 cI, 0 mD, 1 cD) |          imposible          |          imposible          |
+| **D (2 mI, 2 cI, 1 mD, 1 cD)** |          problema           | D-I (3 mI, 2 cI, 0 mD, 1 cD) |          imposible          |          imposible          | D-I(3 mI, 3 cI, 0 mD, 0 cD) |
+| **I (3 mI, 1 cI, 0 mD, 2 cD)** | I-D(3 mI, 2 cI, 0 mD, 1 cD) |           problema           |          imposible          | I-D(1 mI, 1 cI, 2 mD, 2 cD) |          problema           |
+| **D (1 mI, 1 cI, 2 mD, 2 cD)** |          problema           |           problema           |          problema           | D-I(3 mI, 1 cI, 0 mD, 2 cD) | D-I(2 mI, 2 cI, 1 mD, 1 cD) |
+| **I (2 mI, 2 cI, 1 mD, 1 cD)** |          problema           |           problema           |          problema           | I-D(0 mI, 2 cI, 3 mD, 1 cD) | I-D(1 mI, 1 cI, 2 mD, 2 cD) |
+| **D (0 mI, 2 cI, 3 mD, 1 cD)** | D-I(0 mI, 3 cI, 3 mD, 0 cD) |           problema           |          imposible          | D-I(2 mI, 2 cI, 1 mD, 1 cD) |          problema           |
+| **I (0 mI, 3 cI, 3 mD, 0 cD)** | I-D(0 mI, 2 cI, 3 mD, 1 cD) |          imposible           | I-D(0 mI, 1 cI, 3 mD, 2 cD) |          imposible          |          imposible          |
+| **D (0 mI, 1 cI, 3 mD, 2 cD)** | D-I(0 mI, 2 cI, 3 mD, 1 cD) | D-I(1 mI, 1 cI, 2 mD, 2 cD)  | D-I(0 mI, 3 cI, 3 mD, 0 cD) |          problema           |          problema           |
+| **I (0 mI, 2 cI, 3 mD, 1 cD)** | I-D(0 mI, 1 cI, 3 mD, 2 cD) |          imposible           | I-D(0 mI, 0 cI, 3 mD, 3 cD) |          imposible          |          imposible          |
+| **I (1 mI, 1 cI, 2 mD, 2 cD)** |          problema           | I-D(0 mI, 1 cI, 3 mD, 2 cD)  |          imposible          |          imposible          | I-D(0 mI, 0 cI, 3 mD, 3 cD) |
+| **D (0 mI, 0 cI, 3 mD, 3 cD)** | D-I(0 mI, 1 cI, 3 mD, 2 cD) |           problema           | D-I(0 mI, 2 cI, 3 mD, 1 cD) |          problema           | D-I(1 mI, 1 cI, 2 mD, 2 cD) |
+| **I (0 mI, 1 cI, 3 mD, 2 cD)** | I-D(0 mI, 0 cI, 3 mD, 3 cD) |          imposible           |          imposible          |          imposible          |          imposible          |
+
+### Medida de rendimiento:
+
+La **_medida de rendimiento_** que yo encontré fue de **11 pasos**, iniciando por cruzar un monje y un caníbal al lado derecho (2m, 2c, 1m, 1c), el monje regresa solo al lado izquierdo (3m, 2c, 0m, 1c), luego cruzan dos caníbales del lado izquierdo al lado derecho (3m, 0c, 0m, 3c), ahora cruza un caníbal solo del lado derecho al lado izquierdo (3m, 1c, 0m, 2c), cruzamos dos monjes del lado izquierdo al lado derecho (1m, 1c, 2m, 2c), luego cruzan 1 monje y un caníbal del lado derecho al lado izquierdo (2m, 2c, 1m , 1c), ahora cruzan dos monjes del lado izquierdo al lado derecho y ya tenemos 3 monjes del lado derecho con un caníbal y del lado izquierdo 2 caníbales solamente. Después de esto, el caníbal del lado derecho cruza al lado izquierdo (0m, 3c, 3m, 0c), y cruzan 2 caníbales del lado izquierdo al lado derecho (0m, 1c, 3m, 2c), finalmente el caníbal del lado derecho regresa al lado izquierdo por el tercer caníbal y juntos regresan al lado derecho. De esta manera, llegamos de la manera más optima al estado final.
