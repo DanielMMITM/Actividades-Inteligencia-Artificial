@@ -499,7 +499,11 @@ Lo primero que debemos hacer, será instalar la librería de OpenCV como se mues
 
 ```
 pip install opencv-python
-ó
+```
+
+ó bien,
+
+```
 pip3 install opencv-python
 ```
 
@@ -747,3 +751,137 @@ Durante la resolución de este problema encontraremos la siguiente notación:
 La **_medida de rendimiento_** que yo encontré fue de **11 pasos**, iniciando por cruzar un monje y un caníbal al lado derecho (2m, 2c, 1m, 1c), el monje regresa solo al lado izquierdo (3m, 2c, 0m, 1c), luego cruzan dos caníbales del lado izquierdo al lado derecho (3m, 0c, 0m, 3c), ahora cruza un caníbal solo del lado derecho al lado izquierdo (3m, 1c, 0m, 2c), cruzamos dos monjes del lado izquierdo al lado derecho (1m, 1c, 2m, 2c), luego cruzan 1 monje y un caníbal del lado derecho al lado izquierdo (2m, 2c, 1m , 1c), ahora cruzan dos monjes del lado izquierdo al lado derecho y ya tenemos 3 monjes del lado derecho con un caníbal y del lado izquierdo 2 caníbales solamente. Después de esto, el caníbal del lado derecho cruza al lado izquierdo (0m, 3c, 3m, 0c), y cruzan 2 caníbales del lado izquierdo al lado derecho (0m, 1c, 3m, 2c), finalmente el caníbal del lado derecho regresa al lado izquierdo por el tercer caníbal y juntos regresan al lado derecho. De esta manera, llegamos de la manera más optima al estado final.
 
 ---
+
+# Generación de Dataset de rostros
+
+Un conjunto de datos (conocido también por el anglicismo dataset, comúnmente utilizado en algunos países hispanohablantes) es una colección de datos habitualmente tabulada. En el caso de datos tabulados, un conjunto de datos contiene los valores para cada una de las variables organizadas como columnas, como por ejemplo la altura y el peso de un objeto, que corresponden a cada miembro delconjunto de datos, que están organizados en filas. Cada uno de estos valores se conoce con el nombre de dato. El conjunto de datos también puede consistir en una colección de documentos o de archivos.
+
+Para esta actividad se requirió un total de 5 personas, para que pudieramos generar el dataset, en este caso fueron 200 fotos por persona.
+Dichas fotos se tomaron con un programa previamente visto en clase que a continuación se muestra:
+
+```python
+import numpy as np
+import cv2 as cv
+import math
+
+cap = cv.VideoCapture(0)
+i = 0
+
+while True:
+	i = i + 1
+	ret, frame = cap.read()
+	frame = cv.rectangle(frame, (220, 50), (550, 400), (0, 255, 0), 5)
+	frame2 = frame[40:400, 210:550]
+	cv.imwrite('ruta_para_guardar_las_imagenes\\' + str(i) + '.jpg', frame2)
+	cv.imshow("frame", frame)
+	cv.imshow("dataset", frame2)
+	k = cv.waitKey(1)
+	if  k == 27:
+	break
+
+cap.release()
+cv.destroyAllWindows()
+```
+
+Este programa no hace más que acceder a la cámara del sistema y mostrarla, después en una ventana aparte, muestra la misma cámara pero con un recorte que va más enfocado a nuestra cara, esa ventana es dónde se muestra cómo quedará la foto. Estas fotos se toman consecutivamente una vez arranca el programa y utilizamos un contador para que pueda darle un nombre diferente a cada foto, en este caso son fotos con nombres numerados.
+
+Para generar el dataset, veamos lo siguiente.
+
+### Eigenfaces
+
+Un Eigenface (en español cara propia) es el nombre dado a un conjunto de vectores propios cuando se utiliza en el problema de visión artificial del reconocimiento de rostros humanos. Sirovich y Kirby desarrollaron el enfoque de usar caras propias para el reconocimiento y lo usaron Matthew Turk y Alex Pentland en la clasificación de caras. Los vectores propios se derivan de la matriz de covarianza de la distribución de probabilidad sobre el espacio vectorial de alta dimensión de imágenes de rostros. Las caras propias forman un conjunto base de todas las imágenes utilizadas para construir la matriz de covarianza. Esto produce una reducción de la dimensión al permitir que el conjunto más pequeño de imágenes base represente las imágenes de entrenamiento originales. La clasificación se puede lograr comparando cómo se representan las caras por el conjunto base.
+
+### Generación
+
+Se puede generar un conjunto de caras propias mediante la realización de un proceso matemático llamado análisis de componentes principales (PCA) en un gran conjunto de imágenes que representan diferentes rostros humanos. De manera informal, las caras propias pueden considerarse un conjunto de "ingredientes faciales estandarizados", derivados del análisis estadístico de muchas imágenes de rostros. Cualquier rostro humano puede considerarse una combinación de estos rostros estándar. Por ejemplo, la cara de uno podría estar compuesta por la cara promedio más el 10 % de la cara propia 1, el 55 % de la cara propia 2 e incluso el −3 % de la cara propia 3. Sorprendentemente, no se necesitan muchas caras propias combinadas para lograr una aproximación justa de la mayoría de las caras. Además, debido a que la cara de una persona no se registra mediante una fotografía digital, sino simplemente como una lista de valores (un valor para cada cara propia en la base de datos utilizada), se ocupa mucho menos espacio para la cara de cada persona.
+Las caras propias que se crean aparecerán como áreas claras y oscuras que se organizan en un patrón específico. Este patrón es cómo se seleccionan las diferentes características de una cara para evaluarlas y puntuarlas. Habrá un patrón para evaluar la simetría, si hay algún estilo de vello facial, dónde está la línea del cabello o una evaluación del tamaño de la nariz o la boca. Otras caras propias tienen patrones que son menos fáciles de identificar, y la imagen de la cara propia puede parecerse muy poco a una cara.
+La técnica utilizada en la creación de caras propias y su uso para el reconocimiento también se utiliza fuera del reconocimiento facial: reconocimiento de escritura a mano, lectura de labios, reconocimiento de voz, lenguaje de señas /interpretación de gestos con las manos y análisis de imágenes médicas. Por lo tanto, algunos no usan el término "eigenface", sino que prefieren usar 'eigenimage'.
+Ahora bien, comenzamos por instalar las librerías:
+
+```
+pip install opencv-python
+pip install numpy
+```
+
+ó
+
+```
+pip3 install opencv-python
+pip3 install numpy
+```
+
+Una vez hecho comenzamos importándolas:
+
+```python
+import cv2 as  cv
+import numpy as  np
+import  os
+```
+
+seguido de esto, pasamos el directorio para el dataset:
+
+```python
+dataSet ='C:\\Users\\Edani\\OneDrive\\Documentos\\IA\\DatasetRostros'
+faces  =  os.listdir(dataSet)
+print(faces)
+```
+
+Ahora lo que haremos, será recorrer cada una de estas carpetas que contienen los rostros de las diferentes personas, para poder sacar cada foto y la agregamos a una lista donde esatarán todas las fotos, aquí tenemos una variable labels y un label, la variable labels es una lista que guardara el numero de cada persona y la variable label es simplemente un contador.
+Al final solo corroboramos cuantas fotos fueron para cada label.
+
+```python
+labels = []
+facesData = []
+label = 0
+for face in faces:
+	facePath = dataSet+'\\'+face
+	for faceName in os.listdir(facePath):
+		labels.append(label)
+		facesData.append(cv.imread(facePath+'\\'+faceName,0))
+	label = label + 1
+for c in range(label):
+print(np.count_nonzero(np.array(labels) == c))
+```
+
+Ahora, procederemos a generar el XML con la técnica de **_eigenfaces_** mediante el siguiente código.
+
+```python
+faceRecognizer  =  cv.face.EigenFaceRecognizer_create()
+faceRecognizer.train(facesData, np.array(labels))
+faceRecognizer.write('edgareigenface.xml')
+```
+
+Como podemos ver, creamos primero una instancia de la técica y posteriormente la entrenamos pasándole los labels y los rostros para que los asocie.
+Finalmente, para probar esto, lo haremos mediante el siguiente código:
+
+```python
+import cv2 as  cv
+import  os
+
+faceRecognizer  =  cv.face.EigenFaceRecognizer_create()
+faceRecognizer.read('edgareigenface.xml')
+
+cap  =  cv.VideoCapture(0)
+
+rostro  = cv.CascadeClassifier('C:\\Users\\Edani\\OneDrive\\Documentos\\IA\\Jupyter\\Introduccion-OpenCV\\Video\\haarcascade_frontalface_alt.xml')
+
+while  True:
+	ret, frame  =  cap.read()
+	if  ret  ==  False: break
+	gray  =  cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+	cpGray  =  gray.copy()
+	rostros  =  rostro.detectMultiScale(gray, 1.3, 3)
+	for(x, y, w, h) in  rostros:
+		frame2  =  cpGray[y:y+h, x:x+w]
+		frame2  =  cv.resize(frame2, (340,360), interpolation=cv.INTER_CUBIC)
+		result  =  faceRecognizer.predict(frame2)
+		cv.putText(frame, '{}'.format(result), (x,y-20), 1,3.3, (255,255,0), 1, cv.LINE_AA)
+	cv.imshow('frame', frame)
+	k  =  cv.waitKey(1)
+	if  k  ==  27:
+		break
+cap.release()
+cv.destroyAllWindows()
+```
+
+Este programa no hace más que leer el XML que entrenamos y apoyarse del haarcascade_frontalface para poder reconocer caras frontales y determinar mediante acceso a la cámara que persona (hablando de su label) se encuentra frente a la cámara. Muestra arriba de la cabeza de la persona, el número de label y otro número con muchos dígitos.
