@@ -650,6 +650,53 @@ kill(supervivientes)
 
 ---
 
+# Problema de las 3 ranas verdes y las 3 ranas marrones
+
+El juego consiste en pasar las 3 ranas verdes a la derecha y las 3 ranas marrones a la izquierda. Las ranas pueden saltar a una piedra vacía que tengan delante, o saltar por encima de otra rana si en medio de ambas hay una piedra vacía.
+Debemos tener en cuenta que, no es posible saltar por encima de más de 1 rana, es decir, veamos este ejemplo:
+
+- RM3 | RM2 | RM1 | \_ | RV1 | RV2 | RV3
+
+1. La rana verde 1 y 2, pueden saltar satisfactoriamente al espacio vacío, pero la rana verde 3, no puede realizar este salto. Lo mismo para las ranas del color marrón.
+
+Ahora pasemos a la solución.
+
+### Secuencia de percepción:
+
+A continuación, se muestra en una tabla el análisis de todos los posibles estados o situaciones para el ejercicio de las ranas, las cuales podríamos realizar en este ejercicio para llegar al estado final o estado ideal.
+Cabe destacar que la solución fue encontrada a base de prueba y error.
+
+Durante la resolución de este problema encontraremos la siguiente notación:
+
+- **RM:** Rana de color Marrón.
+- **RV:** Rana de color Verde.
+
+#### Espacio de estados
+
+| Número de movimientos | Posición 1 | Posición 2 | Posición 3 | Posición 4 | Posición 5 | Posición 6 | Posición 7 |
+| --------------------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
+| **0**                 | RM3        | RM2        | RM1        | -          | RV1        | RV2        | RV3        |
+| **1**                 | RM3        | RM2        | -          | RM1        | RV1        | RV2        | RV3        |
+| **2**                 | RM3        | RM2        | RV1        | RM1        | -          | RV2        | RV3        |
+| **3**                 | RM3        | RM2        | RV1        | RM1        | RV2        | -          | RV3        |
+| **4**                 | RM3        | RM2        | RV1        | -          | RV2        | RM1        | RV3        |
+| **5**                 | RM3        | -          | RV1        | RM2        | RV2        | RM1        | RV3        |
+| **6**                 | -          | RM3        | RV1        | RM2        | RV2        | RM1        | RV3        |
+| **7**                 | RV1        | RM3        | -          | RM2        | RV2        | RM1        | RV3        |
+| **8**                 | RV1        | RM3        | RV2        | RM2        | -          | RM1        | RV3        |
+| **9**                 | RV1        | RM3        | RV2        | RM2        | RV3        | RM1        | -          |
+| **10**                | RV1        | RM3        | RV2        | RM2        | RV3        | -          | RM1        |
+| **11**                | RV1        | RM3        | RV2        | -          | RV3        | RM2        | RM1        |
+| **12**                | RV1        | -          | RV2        | RM3        | RV3        | RM2        | RM1        |
+| **13**                | RV1        | RV2        | -          | RM3        | RV3        | RM2        | RM1        |
+| **14**                | RV1        | RV2        | RV3        | RM3        | -          | RM2        | RM1        |
+| **15**                | RV1        | RV2        | RV3        | -          | RM3        | RM2        | RM1        |
+
+### Medida de rendimiento:
+
+La **_medida de rendimiento_** que se encontró fue de **15 saltos**, iniciando por saltar la rana color marrón 1, posteriormente, salta la rana color verde 1 al lugar donde estaba la rana marrón 1. Así, la rana verde 2 salta a la posición donde se encontraba la rana verde 1, la rana marrón 1 aprovecha el espacio dejado por la rana verde 2 y se coloca ahí. Ahora, la rana marrón 2 toma el espacio vacío y la rana marrón 3 toma el espacio precedente de la rana marrón 2. En este punto la rana verde 1 logra cruzar del otro lado tomando el lugar inicial de la rana marrón 3, la rana verde 2 aprovecha el lugar que dejo la rana verde 1 y salta ahí. La rana verde 3 finalmente salta al lugar vacío en la posición 5, seguido de esto la rana marrón ahora toma el lugar inicial de la rana verde 3. La rana marrón 2 logra tomar la posición 6, que es donde se encontraba inicialmente la rana verde 2. En este punto la rana marrón 3 toma la posición 4 y metemos a la rana verde 2 en la posición 2, donde inicialmente estaba la rana marrón 3.
+Finalmente, la rana verde 3 salta a la posición 3 y la rana marrón a la posición 5. De esta manera, todas las ranas cruzaron de lado sin problema alguno.
+
 # Problema de los 3 misioneros y los 3 caníbales
 
 Tres misioneros se perdieron explorando una jungla. Separados de sus compañeros, sin alimento y sin radio, solo sabían que para llegar a su destino debían ir siempre hacia adelante. Los tres misioneros se detuvieron frente a un río que les bloqueaba el paso, preguntándose que podían hacer. De repente, aparecieron tres caníbales llevando un bote, pues también el-los querían cruzar el río. Ya anteriormente se habían encontrado grupos de misioneros y caníbales, y cada uno respetaba a los otros, pero sin confiaren ellos. Los caníbales se daban un festín con los misioneros cuando les superaban en número. Los tres caníbales deseaban ayudar a los misioneros a cruzar el río, pero su bote no podía llevar más de dos personas a la vez y los misioneros no querían que los caníbales les superaran en número. ¿Cómo puede resolverse el problema, sin que en ningún momento haya más caníbales que misioneros en cualquier orilla del río? recuerda que un misionero y un caníbal en una orilla del río más uno o dos caníbales en el bote al mismo lado, significa que los misioneros tendrán problemas.
@@ -661,7 +708,8 @@ Para este ejercicio solo fue cuestión de probar, aunque se encontró un patrón
 ### Secuencia de percepción:
 
 A continuación, se muestra en una tabla el análisis de todos los posibles estados o situaciones para el ejercicio de monjes, las cuales podríamos realizar en este ejercicio para llegar al estado final o estado ideal.
-Se utiliza la siguiente notación:
+
+Durante la resolución de este problema encontraremos la siguiente notación:
 
 - **D:** Para lado derecho.
 - **I:** Para lado Izquierdo.
@@ -697,3 +745,5 @@ Se utiliza la siguiente notación:
 ### Medida de rendimiento:
 
 La **_medida de rendimiento_** que yo encontré fue de **11 pasos**, iniciando por cruzar un monje y un caníbal al lado derecho (2m, 2c, 1m, 1c), el monje regresa solo al lado izquierdo (3m, 2c, 0m, 1c), luego cruzan dos caníbales del lado izquierdo al lado derecho (3m, 0c, 0m, 3c), ahora cruza un caníbal solo del lado derecho al lado izquierdo (3m, 1c, 0m, 2c), cruzamos dos monjes del lado izquierdo al lado derecho (1m, 1c, 2m, 2c), luego cruzan 1 monje y un caníbal del lado derecho al lado izquierdo (2m, 2c, 1m , 1c), ahora cruzan dos monjes del lado izquierdo al lado derecho y ya tenemos 3 monjes del lado derecho con un caníbal y del lado izquierdo 2 caníbales solamente. Después de esto, el caníbal del lado derecho cruza al lado izquierdo (0m, 3c, 3m, 0c), y cruzan 2 caníbales del lado izquierdo al lado derecho (0m, 1c, 3m, 2c), finalmente el caníbal del lado derecho regresa al lado izquierdo por el tercer caníbal y juntos regresan al lado derecho. De esta manera, llegamos de la manera más optima al estado final.
+
+---
