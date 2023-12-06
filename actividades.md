@@ -652,6 +652,64 @@ supervivientes  =  int(input("Introduce el número de supervivientes: "))
 kill(supervivientes)
 ```
 
+# Problema el papel de la heurística
+
+La heurística comprende un conjunto de técnicas y métodos destinados a resolver problemas, siendo la palabra de origen griego εὑρίσκειν, que significa "hallar, inventar". Se considera la heurística como el arte de la invención por parte de los seres humanos, con la intención de desarrollar estrategias, métodos y criterios que faciliten la resolución de problemas mediante la creatividad, el pensamiento divergente o lateral.
+
+La heurística se fundamenta en la experiencia personal del individuo y en la de otros para encontrar la solución más viable a un problema. En este contexto, se puede concebir la heurística como una teoría que estimula el pensamiento del individuo encargado de analizar todos los materiales recopilados durante una investigación. En este sentido, está relacionada con la toma de decisiones para resolver un problema, aunque no garantiza que la opción elegida sea la más idónea.
+
+Como disciplina científica en su sentido más amplio, la heurística puede aplicarse a cualquier ciencia con el propósito de desarrollar medios, principios, reglas o estrategias que ayuden a encontrar la solución más eficaz y eficiente al problema analizado por el individuo.
+
+Existen diversos procedimientos heurísticos que se clasifican en principios heurísticos, que ofrecen sugerencias para encontrar la solución ideal; reglas heurísticas, que indican los medios para resolver el problema; y estrategias heurísticas, que permiten organizar los materiales o recursos recopilados que contribuyen a la búsqueda de la solución del problema.
+
+El término heurístico puede utilizarse como sustantivo y adjetivo. Como sustantivo, hace referencia a la ciencia o arte del descubrimiento, considerada como una disciplina digna de ser investigada. Como adjetivo, señala los principios, reglas y estrategias idóneas para encontrar la solución al problema.
+
+Es relevante destacar que Albert Einstein utilizó el término heurística en su publicación sobre el efecto fotoeléctrico, titulada "Sobre un punto de vista heurístico concerniente a la producción y transformación de la luz", la cual le valió el Premio Nobel de Física en 1921.
+
+Ahora veamos esto en programación, tenemos el siguiente código que aborda la resolución de cualquier laberinto mediante un enfoque recursivo. Esto lo hace de la siguiente manera
+
+1. La representación del laberinto se generará mediante una matriz, donde las paredes se representarán con el número "1", los espacios vacíos o caminos con el número "0" y la salida del laberinto con el número '4'
+
+2. El camino para resolver el laberinto se representa con el número '2'.
+
+```python
+
+laberinto  = [
+[1,1,1,1,1,1,1,1,1],
+[0,0,0,0,0,0,1,0,1],
+[1,1,1,0,1,1,1,0,1],
+[1,0,0,0,1,0,1,0,1],
+[1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,0,1,0,1],
+[4,0,1,0,0,0,1,0,1],
+[1,1,1,1,1,1,1,1,1],
+]
+```
+
+Veamos la función recursiva denominada buscar(), que se encarga de resolver el laberinto. La función contiene condiciones para validar la posición (x, y) dentro de los límites del laberinto y establece casos base para determinar si se ha encontrado la salida _(4)._ Además, se asegura de no visitar paredes _(1)_ o celdas ya marcadas _(2)_.
+En la tercera condición, se realiza una llamada recursiva para explorar los cuatro vecinos de la posición actual. Este enfoque recursivo facilita la búsqueda del camino de solución del laberinto, marcando las celdas con '0' o '1' según la configuración específica del laberinto. La ejecución de la función persiste hasta que se localiza la salida, identificada con el marcador "4".
+Finalmente, se invoca la función utilizando las coordenadas iniciales (1, 0), y se muestra en pantalla el laberinto resuelto.
+
+```py
+def resolver(x, y):
+	if x < 0 or y < 0 or x >= 9 or y >= 9:
+		return
+	if laberinto[x][y] == 4:
+		return True
+	elif laberinto[x][y] != 1 and laberinto[x][y] != 2:
+		laberinto[x][y] = 2
+		if resolver(x-1, y) or resolver(x+1,y) or resolver(x,y-1) or resolver(x, y+1):
+			return True
+		else:
+			laberinto[x][y] = 0
+resolver(1, 0)
+for x in range(9):
+	for y in range(9):
+		print(f"{laberinto[x][y]} ", end="")
+	print()
+```
+
 ---
 
 # Problema de las 3 ranas verdes y las 3 ranas marrones
